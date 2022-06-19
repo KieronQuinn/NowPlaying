@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_package = "com.google.audio.ambientmusic";
+option java_outer_classname = "ShardTracks";
+
+message Track {
+  string db_id = 1;
+  string id = 2;
+  string trackName = 3;
+  string artist = 4;
+  string google_id = 8;
+  repeated Player player = 9;
+  string album = 13;
+  int32 year = 14;
+
+  message Player {
+    string url = 2;
+  }
+}

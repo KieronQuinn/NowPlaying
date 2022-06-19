@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "com.google.audio.ambientmusic";
+option java_outer_classname = "HistoryEntry";
+
+message Entry {
+
+  TrackData track_data = 9;
+
+  message TrackData {
+    repeated StreamingOption streaming_option = 9;
+
+    message StreamingOption{
+        string url = 2;
+    }
+  }
+}

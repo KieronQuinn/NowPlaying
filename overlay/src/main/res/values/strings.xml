@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Won't be copied into the APK -->
+    <string name="app_name">Stub</string>
+    <string name="history_activity_title">Stub</string>
+    <string name="history_content_label">Stub</string>
+    <string name="ambient_music_service_name">Stub</string>
+    <string name="setup_wizard_menu_summary">Stub</string>
+    <string name="setup_wizard_menu_subtext">Stub</string>
+    <string name="ambient_music_title">Stub</string>
+    <string name="ambient_music_settings_subtitle">Stub</string>
+    <string name="app_name_now_playing">Stub</string>
+</resources>

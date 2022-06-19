@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Override system colours `cat colors.xml | grep "@color/system_"`-->
+    <color name="accent_primary_variant">@color/system_accent1_300</color>
+    <color name="album_art_selected_background">@color/system_accent1_100</color>
+    <color name="album_art_selected_icon">@color/system_neutral1_900</color>
+    <color name="album_art_unselected_background">@color/system_neutral1_800</color>
+    <color name="album_art_unselected_icon">@color/system_neutral1_50</color>
+    <color name="bottom_nav">@color/system_neutral2_200</color>
+    <color name="bottom_nav_background">@color/system_neutral1_700</color>
+    <color name="bottom_nav_selected">@color/system_accent1_100</color>
+    <color name="favorite_icon_color_border">@color/system_neutral2_200</color>
+    <color name="favorite_icon_color_full">@color/system_accent1_300</color>
+    <color name="history_toolbar_color">@color/system_neutral1_700</color>
+    <color name="ic_expand_more">@color/system_neutral2_200</color>
+    <color name="multi_select_checkbox_color">@color/system_accent1_300</color>
+    <color name="multi_select_empty_checkbox_color">@color/system_neutral1_50</color>
+    <color name="selected_background">@color/system_neutral1_800</color>
+    <color name="settingslib_colorSurfaceHeader">@color/system_neutral1_700</color>
+    <color name="settingslib_colorSurfaceVariant">@color/system_neutral1_700</color>
+    <color name="settingslib_dialog_accent">@color/system_accent1_100</color>
+    <color name="settingslib_dialog_background">@color/system_neutral1_800</color>
+    <color name="settingslib_text_color_preference_category_title">@color/system_accent1_100</color>
+    <color name="settingslib_text_color_primary_device_default">@color/system_neutral1_50</color>
+    <color name="settingslib_thumb_disabled_color">@color/system_neutral1_700</color>
+    <color name="settingslib_thumb_off_color">@color/system_neutral1_400</color>
+    <color name="settingslib_track_off_color">@color/system_neutral1_700</color>
+    <color name="song_actions_dialog_background">@color/system_neutral1_900</color>
+    <color name="song_group_title">@color/system_accent1_300</color>
+</resources>

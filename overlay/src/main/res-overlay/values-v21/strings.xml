@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_now_playing">@string/history_content_label</string>
+</resources>

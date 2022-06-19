@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kieronquinn.app.pixelambientmusic"
+    android:compileSdkVersion="32"
+    android:compileSdkVersionCodename="Tiramisu">
+
+    <permission
+        android:name="com.kieronquinn.app.pixelambientmusic.ACCESS_SERVICE"
+        android:icon="@drawable/ic_media_stream_on_gblue"
+        android:label="Access Now Playing"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.kieronquinn.app.pixelambientmusic.ACCESS_SERVICE" />
+    <uses-permission android:name="com.kieronquinn.app.ambientmusicmod.ACCESS_SERVICE" />
+
+    <application
+        android:name="com.kieronquinn.app.pixelambientmusic.Injector"
+        android:allowBackup="true"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:extractNativeLibs="true"
+        android:icon="@mipmap/product_logo_pixel_suggest_services_launcher_color_48"
+        android:label="@string/app_name_now_playing"
+        android:supportsRtl="true">
+        <service
+            android:name="com.google.android.apps.miphone.aiai.common.superpacks.impl.AiAiPersistentDownloadJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="com.google.android.apps.miphone.aiai.common.superpacks.impl.PeriodicCleanupService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="com.google.android.apps.miphone.aiai.common.superpacks.impl.AiAiSuperpacksService"
+            android:exported="false" />
+
+        <receiver
+            android:name="com.google.intelligence.sense.ambientmusic.favorites.FavoritesReceiver"
+            android:exported="false" />
+
+        <activity
+            android:name="com.google.intelligence.sense.ambientmusic.history.HistoryActivity"
+            android:exported="true"
+            android:icon="@drawable/product_logo_now_playing_color_48"
+            android:label="@string/history_activity_title"
+            android:launchMode="singleTask"
+            android:theme="@style/AmbientMusicSettingsTheme">
+            <intent-filter>
+                <action android:name="com.google.intelligence.sense.NOW_PLAYING_HISTORY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="history"
+                    android:scheme="now-playing" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.google.intelligence.sense.ambientmusic.history.AddShortcutActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/product_logo_now_playing_color_48"
+            android:label="@string/history_activity_title">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.google.intelligence.sense.ambientmusic.history.HistoryGarbageCollector"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="com.google.intelligence.sense.ambientmusic.reload.ModelReloadService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver
+            android:name="com.google.intelligence.sense.ambientmusic.InternalBroadcastReceiver"
+            android:exported="false" />
+        <receiver
+            android:name="com.google.intelligence.sense.ambientmusic.AmbientMusicDetector$Receiver"
+            android:exported="false" />
+
+        <service
+            android:name="com.google.intelligence.sense.ambientmusic.AmbientMusicDetector$Service"
+            android:exported="false"
+            android:label="@string/ambient_music_service_name" />
+
+        <activity
+            android:name="com.google.intelligence.sense.ambientmusic.AmbientMusicSetupWizardActivity"
+            android:exported="false"
+            android:icon="@drawable/ic_media_stream_on_gblue"
+            android:theme="@style/SudThemeGlifV3.DayNight" />
+
+        <activity
+            android:name="com.google.intelligence.sense.ambientmusic.AmbientMusicSettingsActivity"
+            android:exported="false"
+            android:label="@string/ambient_music_title"
+            android:theme="@style/AmbientMusicSettingsTheme" />
+
+        <activity-alias
+            android:name="com.google.intelligence.sense.ambientmusic.AmbientMusicNotificationsSettingsActivity"
+            android:exported="false"
+            android:label="@string/ambient_music_title"
+            android:targetActivity="com.google.intelligence.sense.ambientmusic.AmbientMusicSettingsActivity"
+            android:theme="@style/AmbientMusicSettingsTheme" />
+
+        <receiver
+            android:name="com.google.intelligence.sense.common.SystemBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.google.intelligence.sense.ondemand.InternalBroadcastReceiver"
+            android:exported="false" />
+
+        <service
+            android:name="com.google.intelligence.sense.ondemand.settings.InstallAgaFingerprinterJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name="com.google.android.apps.miphone.aiai.nowplaying.api.NowPlayingService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <!-- AndroidX Work -->
+        <service
+            android:name="androidx.work.impl.background.systemalarm.SystemAlarmService"
+            android:directBootAware="false"
+            android:enabled="@bool/enable_system_alarm_service_default"
+            android:exported="false" />
+        <service
+            android:name="androidx.work.impl.background.systemjob.SystemJobService"
+            android:directBootAware="false"
+            android:enabled="@bool/enable_system_job_service_default"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:directBootAware="false"
+            android:enabled="@bool/enable_system_foreground_service_default"
+            android:exported="false" />
+
+        <receiver
+            android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver"
+            android:directBootAware="false"
+            android:enabled="true"
+            android:exported="false" />
+        <receiver
+            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy"
+            android:directBootAware="false"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy"
+            android:directBootAware="false"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+                <action android:name="android.intent.action.BATTERY_LOW" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy"
+            android:directBootAware="false"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
+                <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy"
+            android:directBootAware="false"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver"
+            android:directBootAware="false"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver"
+            android:directBootAware="false"
+            android:enabled="@bool/enable_system_alarm_service_default"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="androidx.work.impl.background.systemalarm.UpdateProxies" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+            android:directBootAware="false"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.DUMP">
+            <intent-filter>
+                <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Barebones stubs to get Executor going -->
+        <service
+            android:name="com.google.android.apps.miphone.aiai.actions.service.ActionRankingDataTtlService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <activity
+            android:name="com.google.android.apps.miphone.aiai.adaptiveaudio.settings.ui.AdaptiveAudioSettingsActivity"
+            android:enabled="false"
+            android:exported="false" />
+        <service
+            android:name="com.google.android.apps.miphone.aiai.interestsmodel.storage.privacy.TtlExpiryService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <provider
+            android:name="com.google.intelligence.sense.ambientmusic.history.HistoryContentProvider"
+            android:authorities="com.google.android.as.pam.ambientmusic.historyprovider"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/history_content_label"
+            android:permission="com.kieronquinn.app.pixelambientmusic.ACCESS_SERVICE" />
+
+        <provider
+            android:name=".providers.BackupRestoreProvider"
+            android:authorities="com.google.android.as.pam.ambientmusic.backuprestoreprovider"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/history_content_label"
+            android:permission="com.kieronquinn.app.pixelambientmusic.ACCESS_SERVICE" />
+
+        <!-- Entry point service -->
+        <service
+            android:name=".service.RecognitionService"
+            android:exported="true"
+            android:permission="com.kieronquinn.app.pixelambientmusic.ACCESS_SERVICE">
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.pixelambientmusic.RECOGNITION_SERVICE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <!-- Activity to request required permissions -->
+        <activity
+            android:name=".activities.PermissionsRequestActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:permission="com.kieronquinn.app.pixelambientmusic.ACCESS_SERVICE"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="com.kieronquinn.app.pixelambientmusic.REQUEST_PERMISSIONS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name=".providers.LevelDbProvider"
+            android:authorities="com.google.android.as.pam.ambientmusic.leveldbprovider"
+            android:exported="true"
+            android:permission="com.kieronquinn.app.pixelambientmusic.ACCESS_SERVICE" />
+
+        <provider
+            android:name=".providers.SettingsProvider"
+            android:authorities="com.google.android.as.pam.ambientmusic.settings"
+            android:exported="true"
+            android:permission="com.kieronquinn.app.pixelambientmusic.ACCESS_SERVICE" />
+
+        <receiver
+            android:name=".receivers.ClearPendingReceiver"
+            android:exported="true"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL">
+            <intent-filter>
+                <action android:name="${applicationId}.CLEAR_PENDING_PACKS" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.kieronquinn.app.ambientmusicmod.API_VERSION"
+            android:value="1" />
+
+    </application>
+
+    <queries>
+        <package android:name="com.kieronquinn.app.ambientmusicmod" />
+        <package android:name="com.google.android.googlequicksearchbox" />
+
+        <!-- Players -->
+        <package android:name="com.spotify.music" />
+        <package android:name="com.google.android.youtube" />
+        <package android:name="com.google.android.apps.youtube.music" />
+        <package android:name="com.apple.android.music" />
+        <package android:name="deezer.android.app" />
+    </queries>
+</manifest>

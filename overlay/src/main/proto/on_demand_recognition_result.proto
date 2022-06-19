@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_package = "com.google.audio.ambientmusic";
+option java_outer_classname = "OnDemandRecognitionResult";
+
+message OnDemandResult {
+
+  OnDemandTrack track = 3;
+
+  message OnDemandTrack {
+    string artist = 1;
+    string trackName = 2;
+    string googleId = 19;
+  }
+
+}

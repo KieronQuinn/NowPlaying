@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_package = "com.google.audio.ambientmusic";
+option java_outer_classname = "Linear";
+
+message Tracks {
+  repeated TrackContainer track = 1;
+
+  message TrackContainer {
+    Track track = 1;
+
+    message Track {
+      TrackMetadata metadata = 1;
+      bytes fingerprint = 2;
+      AudioData audio_data = 3;
+
+      message TrackMetadata {
+        string id = 1;
+        string track_name = 3;
+        string artist = 4;
+        fixed64 flags = 6;
+        string google_id = 8;
+        string id_2 = 11;
+      }
+
+      message AudioData {
+        string type = 1;
+        bytes data = 2;
+      }
+    }
+  }
+}

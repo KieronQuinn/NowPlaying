@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_package = "com.google.audio.ambientmusic";
+option java_outer_classname = "RecognitionResult";
+
+message Result {
+
+	repeated Track tracks = 1;
+	Status status = 4;
+
+	message Track {
+	    TrackMetadata metadata = 1;
+	    bool isMatch = 9;
+
+	    message TrackMetadata {
+	        string trackName = 3;
+	        string artist = 4;
+	        string googleId = 8;
+	        repeated Player player = 9;
+
+	        message Player {
+							string url = 2;
+					}
+	    }
+	}
+
+	enum Status {
+	    RECOGNITION_RESULT_UNSPECIFIED = 0;
+			RECOGNIZED = 1;
+			NOT_RECOGNIZED = 2;
+			NOT_MUSIC = 3;
+			RECOGNIZED_BLACKLISTED = 4;
+			SUPPRESSED_AUDIO_PLAYING = 5;
+			SUPPRESSED_AUDIO_RECORDING = 6;
+			SUPPRESSED_PHONE_CALL = 7;
+			SUPPRESSED_NOT_SYSTEM_USER = 8;
+			SUPPRESSED_AUDIO_CASTING = 9;
+			DELAYED = 10;
+	}
+
+}
