@@ -1,5 +1,5 @@
-val versionName = "1.0"
-val versionCode = 100
+val versionName = "1.0.1"
+val versionCode = 101
 val minSdk = 28
 val targetSdk = 31
 //armv7 currently disabled pending LSPlant fix
