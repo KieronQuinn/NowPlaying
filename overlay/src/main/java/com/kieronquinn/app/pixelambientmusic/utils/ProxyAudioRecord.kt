@@ -35,7 +35,12 @@ class ProxyAudioRecord(
     companion object {
         private const val TAG = "ProxyAudioRecord"
         private const val DEVICE_CONFIG_KEY_GAIN = "NowPlaying__recording_gain"
+        private const val DEVICE_CONFIG_KEY_ALTERNATIVE_AUDIO_ENCODING =
+            "NowPlaying__alternative_audio_encoding"
     }
+
+    private val useAlternativeEncoding: Boolean
+        get() = DeviceConfigOverrides.getValue(DEVICE_CONFIG_KEY_ALTERNATIVE_AUDIO_ENCODING) == "true"
 
     constructor(
         attributes: AudioAttributes,
@@ -75,7 +80,7 @@ class ProxyAudioRecord(
         val byteData = ByteArray(sizeInShorts * 2)
         return runWithService {
             it.AudioRecord_read(byteData, offsetInShorts, sizeInShorts).also {
-                byteData.toShortArray().applyGainIfRequired().copyInto(audioData)
+                byteData.toShortArray(useAlternativeEncoding).applyGainIfRequired().copyInto(audioData)
             }
         }.also {
             //Check if the record failed and thus the app won't give us a result, so trigger a skip
@@ -129,8 +134,10 @@ class ProxyAudioRecord(
 
     private fun ShortArray.applyGainIfRequired(): ShortArray {
         val gain = DeviceConfigOverrides.getValue(DEVICE_CONFIG_KEY_GAIN)?.toFloatOrNull()
+        //Apply a gain boost for BIG_ENDIAN encodings since it takes a lot more gain to make a difference
+        val boost = if(useAlternativeEncoding) 20f else 1f
         if(gain == null || gain == 1.0f) return this
-        return applyGain(gain)
+        return applyGain(gain * boost)
     }
 
 }

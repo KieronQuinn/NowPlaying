@@ -1,12 +1,13 @@
 package com.kieronquinn.app.pixelambientmusic.utils.extensions
 
 import java.nio.ByteBuffer
+import java.nio.ByteOrder.BIG_ENDIAN
 import java.nio.ByteOrder.LITTLE_ENDIAN
 
-fun ByteArray.toShortArray(): ShortArray {
+fun ByteArray.toShortArray(bigEndian: Boolean): ShortArray {
     return ShortArray(this.size / 2).apply {
         ByteBuffer.wrap(this@toShortArray)
-            .order(LITTLE_ENDIAN).asShortBuffer()[this]
+            .order(if(bigEndian) BIG_ENDIAN else LITTLE_ENDIAN).asShortBuffer()[this]
     }
 }
 
