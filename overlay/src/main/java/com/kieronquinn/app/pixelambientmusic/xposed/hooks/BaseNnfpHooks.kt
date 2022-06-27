@@ -1,15 +1,19 @@
 package com.kieronquinn.app.pixelambientmusic.xposed.hooks
 
 import android.content.Context
+import com.google.audio.ambientmusic.LegacyRecognitionResult
+import com.google.audio.ambientmusic.NnfpRecognizer
 import com.google.audio.ambientmusic.NnfpRecognizerCallback
 import com.google.audio.ambientmusic.RecognitionResult
 import com.kieronquinn.app.pixelambientmusic.Injector
+import com.kieronquinn.app.pixelambientmusic.components.legacy.LegacyRecognitionConverter
 import com.kieronquinn.app.pixelambientmusic.components.recogniser.MusicRecogniser
 import com.kieronquinn.app.pixelambientmusic.model.RecognitionFailure
 import com.kieronquinn.app.pixelambientmusic.model.RecognitionFailureReason
 import com.kieronquinn.app.pixelambientmusic.model.RecognitionSource
 import com.kieronquinn.app.pixelambientmusic.providers.LevelDbProvider
 import com.kieronquinn.app.pixelambientmusic.utils.extensions.dumpToFile
+import com.kieronquinn.app.pixelambientmusic.utils.extensions.isArmv7
 import com.kieronquinn.app.pixelambientmusic.xposed.XposedHooks
 import java.io.File
 
@@ -22,6 +26,10 @@ abstract class BaseNnfpHooks(private val context: Context): XposedHooks() {
         "/system/etc/firmware/music_detector.sound_model" to "$pamDir/music_detector.sound_model",
         "/system/etc/firmware/music_detector.descriptor" to "$pamDir/music_detector.descriptor"
     )
+
+    private val armv7Config by lazy {
+        context.assets.open("config_armv7.bin").readBytes()
+    }
 
     open fun init(
         shardNames: Array<String>,
@@ -41,7 +49,13 @@ abstract class BaseNnfpHooks(private val context: Context): XposedHooks() {
             }
         }
         args[1] = fixedPaths
-        MethodResult.Skip<Long>()
+        if(isArmv7) {
+            LegacyRecognitionConverter.setLastShardPaths(fixedPaths)
+            //Use the old - static - config from the assets as the format has changed
+            MethodResult.Replace(initArmv7(fixedPaths, armv7Config))
+        }else {
+            MethodResult.Skip()
+        }
     })
 
     open fun addOnDemandRecognizedTrack(
@@ -89,8 +103,41 @@ abstract class BaseNnfpHooks(private val context: Context): XposedHooks() {
         MethodResult.Skip<ByteArray?>()
     }, {
         MusicRecogniser.onStartRecognizing(RecognitionSource.NNFP)
-        MethodResult.Skip()
+        if(isArmv7) {
+            val result = recogniseArmv7(id, audio, audio.size)
+            val legacyResult = LegacyRecognitionResult.LegacyResult.parseFrom(result)
+            val converted = LegacyRecognitionConverter.convertResult(legacyResult)
+            MethodResult.Replace(converted.toByteArray())
+        }else{
+            MethodResult.Skip()
+        }
     })
 
+    private fun initArmv7(shardPaths: Array<String>, recogniserConfig: ByteArray): Long {
+        return NnfpRecognizer::class.java.getDeclaredMethod(
+            "init",
+            Array<String>::class.java,
+            ByteArray::class.java
+        ).apply {
+            isAccessible = true
+        }.invoke(null, shardPaths, recogniserConfig) as Long
+    }
+
+    private fun recogniseArmv7(
+        pointer: Long,
+        audio: ShortArray,
+        length: Int
+    ): ByteArray {
+        return NnfpRecognizer::class.java.getDeclaredMethod(
+            "recognize",
+            Long::class.java,
+            ShortArray::class.java,
+            Integer.TYPE,
+            Integer.TYPE,
+            Integer.TYPE
+        ).apply {
+            isAccessible = true
+        }.invoke(null, pointer, audio, length, 16000, 5) as ByteArray
+    }
 
 }

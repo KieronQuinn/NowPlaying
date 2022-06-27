@@ -1,22 +1,20 @@
 syntax = "proto3";
 
 option java_package = "com.google.audio.ambientmusic";
-option java_outer_classname = "RecognitionResult";
+option java_outer_classname = "LegacyRecognitionResult";
 
-message Result {
+message LegacyResult {
 
   repeated Track tracks = 1;
-  Status status = 4;
-  StatusFooter statusFooter = 5;
+  bool isRecognised = 2;
 
   message Track {
     TrackMetadata metadata = 1;
     fixed64 flags = 2;
     fixed64 flags2 = 3;
     fixed64 flags3 = 4;
-    int32 time = 7;
-    string shard = 8;
-    bool isMatch = 9;
+    repeated fixed64 flags4 = 5;
+    int32 shardIndex = 6;
 
     message TrackMetadata {
       string id1 = 1;
@@ -41,25 +39,5 @@ message Result {
     }
   }
 
-  message StatusFooter {
-    Data data = 2;
-    OtherData otherData = 3;
-    message Data {
-      int32 value = 1;
-      string shard = 2;
-      sfixed32 flags = 3;
-    }
-    message OtherData {
-      sfixed32 flags = 1;
-    }
-  }
-
-  enum Status {
-    UNKNOWN_RECOGNITION_STATUS = 0;
-    MUSIC_RECOGNIZED = 1;
-    NOT_MUSIC = 2;
-    MUSIC_UNRECOGNIZED = 3;
-    RECOGNIZER_BUSY = 4;
-  }
 
 }

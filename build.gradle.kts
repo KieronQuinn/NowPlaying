@@ -6,7 +6,7 @@ plugins {
     id("com.google.protobuf").version("0.8.12").apply(false)
 }
 
-apply("versions.gradle.kts")
+apply("variables.gradle.kts")
 apply("apktool.gradle.kts")
 
 tasks.create<Delete>("clean") {

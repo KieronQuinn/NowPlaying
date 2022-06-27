@@ -7,6 +7,8 @@ import android.net.Uri
 import com.google.audio.ambientmusic.Linear
 import com.google.audio.ambientmusic.ShardTracks
 import com.kieronquinn.app.pixelambientmusic.components.settings.SettingsStateHandler
+import com.kieronquinn.app.pixelambientmusic.utils.extensions.getVersion
+import com.kieronquinn.app.pixelambientmusic.utils.extensions.requireContextCompat
 import org.iq80.leveldb.table.BytewiseComparator
 import org.iq80.leveldb.table.FileChannelTable
 import org.json.JSONArray
@@ -29,6 +31,10 @@ class LevelDbProvider: ContentProvider() {
         private const val COLUMN_PLAYERS = "players"
         private const val COLUMN_ALBUM = "album"
         private const val COLUMN_YEAR = "year"
+
+        private const val CACHE_VERSION = "cache_version"
+
+        private val TRACK_HEADER_SECOND_BYTE = arrayOf((0x0B).toByte(), (0x1B).toByte())
 
         private const val PATH_DOWNLOAD_STATE = "downloadstate"
 
@@ -54,7 +60,7 @@ class LevelDbProvider: ContentProvider() {
     }
 
     private val cachePrefs by lazy {
-        requireContext().getSharedPreferences("${requireContext().packageName}_countcache", Context.MODE_PRIVATE)
+        requireContextCompat().getSharedPreferences("${requireContextCompat().packageName}_countcache", Context.MODE_PRIVATE)
     }
 
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH).apply {
@@ -155,7 +161,7 @@ class LevelDbProvider: ContentProvider() {
     }
 
     private fun getLevelDbCountry(): String? {
-        val superpacksDir = File(requireContext().filesDir, SUPERPACKS_FOLDER)
+        val superpacksDir = File(requireContextCompat().filesDir, SUPERPACKS_FOLDER)
         if(!superpacksDir.exists()) return null
         val ambientDir = File(superpacksDir, AMBIENT_SUPERPACKS_FOLDER)
         if(!ambientDir.exists()) return null
@@ -167,14 +173,14 @@ class LevelDbProvider: ContentProvider() {
 
     private fun getLevelDbFiles(): List<File> {
         val files = ArrayList<File>()
-        val pamDir = File(requireContext().filesDir, PAM_FOLDER)
+        val pamDir = File(requireContextCompat().filesDir, PAM_FOLDER)
         if(!pamDir.exists()) return files
         val levelDbCountry = getLevelDbCountry()
         val coreShard = File(pamDir, SHARD_CORE)
         if(coreShard.exists()){
             files.add(coreShard)
         }
-        val superpacksDir = File(requireContext().filesDir, SUPERPACKS_FOLDER)
+        val superpacksDir = File(requireContextCompat().filesDir, SUPERPACKS_FOLDER)
         if(!superpacksDir.exists()) return files
         val ambientDir = File(superpacksDir, AMBIENT_SUPERPACKS_FOLDER)
         if(!ambientDir.exists()) return files
@@ -239,7 +245,7 @@ class LevelDbProvider: ContentProvider() {
     private fun parseTrackProto(bytes: ByteArray): ShardTracks.Track? {
         //Attempt to differentiate between a track and audio data by reading the header
         if(bytes.size < 2) return null
-        if(bytes[0] != (0x0A).toByte() || bytes[1] != (0x0B).toByte()) return null
+        if(bytes[0] != (0x0A).toByte() || !TRACK_HEADER_SECOND_BYTE.contains(bytes[1])) return null
         //Passed the basic header check, attempt to parse and return null if it fails
         return try {
             ShardTracks.Track.parseFrom(bytes)
@@ -289,7 +295,7 @@ class LevelDbProvider: ContentProvider() {
     }
 
     private fun getSuperpacksDownloadCount(): Cursor {
-        return SettingsStateHandler.getSuperpackDownloadCount(requireContext()).let {
+        return SettingsStateHandler.getSuperpackDownloadCount(requireContextCompat()).let {
             MatrixCursor(arrayOf("count")).apply {
                 addRow(arrayOf(it))
             }
@@ -302,7 +308,7 @@ class LevelDbProvider: ContentProvider() {
     }
 
     private fun loadLinear(name: String): Linear.Tracks? {
-        val file = File(requireContext().cacheDir, name)
+        val file = File(requireContextCompat().cacheDir, name)
         if(!file.exists()) return null
         return Linear.Tracks.parseFrom(file.readBytes())
     }
@@ -350,6 +356,11 @@ class LevelDbProvider: ContentProvider() {
             clearCachedCounts()
             return null
         }
+        //Force an update if the Now Playing version has changed
+        if(cachePrefs.getLong(CACHE_VERSION, 0) != requireContextCompat().getVersion()){
+            clearCachedCounts()
+            return null
+        }
         return getInt(hashCode.toString(), -1).let {
             if(it == -1) null
             else it
@@ -361,7 +372,9 @@ class LevelDbProvider: ContentProvider() {
     }
 
     private fun SharedPreferences.commitCachedCount(hashCode: Int, count: Int) {
-        edit().putInt(hashCode.toString(), count).commit()
+        edit().putInt(hashCode.toString(), count)
+            .putLong(CACHE_VERSION, requireContextCompat().getVersion())
+            .commit()
     }
 
 }

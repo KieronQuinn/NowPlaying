@@ -50,7 +50,11 @@ object DeviceConfigOverrides {
         }else FLAG_VALUES
         listeners.forEach {
             it.onPropertiesChanged(
-                DeviceConfig.Properties(NAMESPACE, values)
+                DeviceConfig.Properties::class.java.getDeclaredConstructor(
+                    String::class.java, Map::class.java
+                ).apply {
+                    isAccessible = true
+                }.newInstance(NAMESPACE, values)
             )
         }
     }

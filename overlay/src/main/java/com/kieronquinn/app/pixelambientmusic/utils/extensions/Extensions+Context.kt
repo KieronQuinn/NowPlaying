@@ -8,3 +8,7 @@ fun Context.dumpToFile(name: String, bytes: ByteArray) {
         out.flush()
     }
 }
+
+fun Context.getVersion(): Long {
+    return packageManager.getPackageInfo(packageName, 0).longVersionCode
+}

@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.util.Log
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.google.audio.ambientmusic.HistoryEntry
@@ -21,8 +20,6 @@ import java.io.File
 class AlbumArtRetriever(private val context: Context) {
 
     companion object {
-        private const val TAG = "AlbumArtRetriever"
-
         private val YOUTUBE_MUSIC_URL_REGEX =
             "https://music.youtube.com/watch\\?v=(.*)&feature=gws_kp_track".toRegex()
 
@@ -103,7 +100,7 @@ class AlbumArtRetriever(private val context: Context) {
             }
 
             override fun onBitmapFailed(e: java.lang.Exception?, errorDrawable: Drawable?) {
-                Log.e(TAG, "Error", e)
+                //No-op, album art is not available
             }
 
             override fun onPrepareLoad(placeHolderDrawable: Drawable?) {

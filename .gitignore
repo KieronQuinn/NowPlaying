@@ -271,6 +271,8 @@ hs_err_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,intellij
 
+.DS_Store
+
 ## Decompiled APK dir
 base/*
 
@@ -279,3 +281,8 @@ base.apk
 
 ##Tools dir
 tools/*
+
+##libsense and libleveldbjni for armv7
+libsense.so
+libleveldbjni.so
+
