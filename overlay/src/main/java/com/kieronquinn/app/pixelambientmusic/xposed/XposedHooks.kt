@@ -22,12 +22,15 @@ abstract class XposedHooks {
                 ContextHooks(),
                 ContextImplHooks(),
                 DeviceConfigHooks(),
-                ExecutorHooks(),
                 FileHooks(context),
                 JobSchedulerHooks(),
                 JobInfoHooks(),
+                HistoryActivityHooks(),
                 InjectionHooks(),
+                LangIdJniModelLessHooks(),
+                LevelDbHooks(),
                 LoggingHooks(),
+                NativePipelineImplHooks(),
                 NnfpHooks(context),
                 Nnfpv3Hooks(context),
                 NotificationHooks(),
@@ -35,9 +38,12 @@ abstract class XposedHooks {
                 SettingsHooks(),
                 SqliteHooks(context),
                 SoundTriggerHooks(),
+                SystemHooks(context),
+                ThreadPoolExecutorHooks(),
                 UserManagerHooks(),
                 UriBuilderHooks(),
-                UriMatcherHooks()
+                UriMatcherHooks(),
+                ViewHooks()
             ).forEach {
                 it.init()
             }

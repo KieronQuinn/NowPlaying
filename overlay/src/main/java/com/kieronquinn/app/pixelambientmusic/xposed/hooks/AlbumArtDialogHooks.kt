@@ -1,5 +1,7 @@
 package com.kieronquinn.app.pixelambientmusic.xposed.hooks
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -38,6 +40,10 @@ object AlbumArtDialogHooks: InjectedHooks() {
         )
         val albumArtImageView = view.findViewById<ImageView>(albumArtId)
         albumArtRetriever.loadTimestampIntoImageView(timestamp, albumArtImageView)
+        //Fix insets on < R
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            view.setPadding(0, 0, 0, view.context.getNavigationBarHeight())
+        }
         MethodResult.Skip<View>()
     })
 
@@ -54,6 +60,13 @@ object AlbumArtDialogHooks: InjectedHooks() {
         } ?: return null
         val matched = REGEX_SONG_ACTIONS_DIALOG_DATA.find(songActionsDialogData)
         return matched?.groupValues?.elementAtOrNull(1)
+    }
+
+    private fun Context.getNavigationBarHeight(): Int {
+        val resourceId: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        return if (resourceId > 0) {
+            resources.getDimensionPixelSize(resourceId)
+        } else 0
     }
 
 }

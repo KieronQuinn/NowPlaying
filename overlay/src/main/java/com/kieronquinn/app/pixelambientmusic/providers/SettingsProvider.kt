@@ -8,6 +8,7 @@ import android.database.MatrixCursor
 import android.net.Uri
 import com.google.gson.Gson
 import com.kieronquinn.app.pixelambientmusic.components.settings.SettingsStateHandler
+import com.kieronquinn.app.pixelambientmusic.utils.extensions.requireContextCompat
 
 class SettingsProvider: ContentProvider() {
 
@@ -36,7 +37,7 @@ class SettingsProvider: ContentProvider() {
         selectionArgs: Array<out String>?,
         sortOrder: String?
     ): Cursor {
-        val settings = gson.toJson(SettingsStateHandler.generateSettingsState(requireContext()))
+        val settings = gson.toJson(SettingsStateHandler.generateSettingsState(requireContextCompat()))
         return MatrixCursor(arrayOf("value")).apply {
             addRow(arrayOf(settings))
         }

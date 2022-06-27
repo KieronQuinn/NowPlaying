@@ -59,7 +59,11 @@ object SettingsStateHandler {
     private fun Context.areSuperpacksDownloaded(): Boolean {
         val database = getDatabasePath(SUPERPACKS_DATABASE_NAME)
         if(!database.exists()) return false
-        val sqliteDatabase = SQLiteDatabase.openDatabase(database.absolutePath, null, 0)
+        val sqliteDatabase = try {
+            SQLiteDatabase.openDatabase(database.absolutePath, null, 0)
+        }catch (e: Exception){
+            return false
+        }
         val pendingDownloads = sqliteDatabase.query(
             SUPERPACKS_PENDING_DOWNLOADS_TABLE_NAME,
             arrayOf(SUPERPACKS_SUPERPACK_NAME_COLUMN),
@@ -98,7 +102,11 @@ object SettingsStateHandler {
     fun getSuperpackDownloadCount(context: Context): Int {
         val database = context.getDatabasePath(SUPERPACKS_DATABASE_NAME)
         if(!database.exists()) return 0
-        val sqliteDatabase = SQLiteDatabase.openDatabase(database.absolutePath, null, 0)
+        val sqliteDatabase = try {
+            SQLiteDatabase.openDatabase(database.absolutePath, null, 0)
+        }catch (e: Exception){
+            return 0
+        }
         val pendingDownloads = sqliteDatabase.query(
             SUPERPACKS_PENDING_DOWNLOADS_TABLE_NAME,
             arrayOf(SUPERPACKS_SUPERPACK_NAME_COLUMN),

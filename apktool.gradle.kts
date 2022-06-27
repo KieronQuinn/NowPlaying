@@ -170,6 +170,33 @@ fun modifyApktoolYml(apktoolYml: File) {
     apktoolYml.writeText(yaml)
 }
 
+fun modifySmaliWithRegex(smaliDir: File) {
+    val replacements = project.extra.get("smaliReplacements") as Array<Triple<String, String, String>>
+    findSmaliDirs(smaliDir).forEach {
+        replacements.forEach { replacement ->
+            val file = File(it.absolutePath + "/" + replacement.first)
+            if(!file.exists()) return@forEach
+            val content = file.readText()
+                .replaceGroup(replacement.second, 1, replacement.third)
+            file.writeText(content)
+        }
+    }
+    val dynamicReplacements = project.extra.get("dynamicSmaliReplacements") as Array<Triple<String, String, String>>
+    findSmaliDirs(smaliDir).forEach {
+        dynamicReplacements.forEach { replacement ->
+            it.listFiles()?.filter { file ->
+                if(file.extension != "smali") return@filter false
+                file.readText().contains(replacement.first)
+            }?.forEach { file ->
+                println("Checking file ${file.name}")
+                val content = file.readText()
+                    .replaceGroup(replacement.second, 1, replacement.third)
+                file.writeText(content)
+            }
+        }
+    }
+}
+
 /**
  *  Decompile the base APK into the base folder, which should not be modified
  */
@@ -256,6 +283,7 @@ task("copyOverlay"){
         copyAssetsDir(decompiledDir, baseDir)
         copyLibsDir(decompiledDir, baseDir)
         copyLibsDir(overlaySrcMain, baseDir)
+        modifySmaliWithRegex(baseDir)
         stripLibs(baseDir)
         stripSmali(baseDir)
         copyManifest(decompiledDir, baseDir)

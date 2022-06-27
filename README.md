@@ -12,6 +12,9 @@ Now Playing is a modified version of Android System Intelligence, running only t
 
 1. Clone the repository as normal
 2. Download the latest original Pixel 6 APK of Android System Intelligence from [APKmirror](https://www.apkmirror.com/apk/google-inc/device-personalization-services/). (Note: At the time of writing, "S" builds are being used for the prebuilt APKs. "T" builds may work but have not been tested)
+
+> Note: If you wish to include armv7 support, in addition download [this](https://www.apkmirror.com/apk/google-inc/pixel-ambient-services/pixel-ambient-services-1-0-181470108-release/pixel-ambient-services-1-0-181470108-android-apk-download/) version of Pixel Ambient Services, and place `libsense.so` from it in `overlay/src/main/lib/armeabi-v7a`, as well as [this](https://www.apkmirror.com/apk/google-inc/google-play-services/google-play-services-22-22-55-release/google-play-services-22-22-55-020300-453326789-android-apk-download/) version of Google Play services, and place `libleveldbjni.so` from it in the same directory.
+
 3. Place the downloaded APK in the root of the repository, name it `base.apk`
 4. Download the latest [APKtool](https://github.com/iBotPeaches/Apktool/releases) JAR and place it in `tools/`. Name it `apktool.jar`
 5. Create a `local.properties` file in the root of the project, and set it up:

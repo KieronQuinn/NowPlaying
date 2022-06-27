@@ -18,7 +18,7 @@ import java.security.Security
 class Injector: AiaiApplication() {
 
     companion object {
-        const val DEBUG = false
+        const val DEBUG = true //TODO disable
     }
 
     override fun attachBaseContext(base: Context) {

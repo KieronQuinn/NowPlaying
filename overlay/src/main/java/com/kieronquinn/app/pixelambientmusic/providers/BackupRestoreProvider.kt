@@ -9,6 +9,7 @@ import android.net.Uri
 import com.google.audio.ambientmusic.Linear
 import com.kieronquinn.app.pixelambientmusic.model.backup.LinearItem
 import com.kieronquinn.app.pixelambientmusic.model.backup.toCursor
+import com.kieronquinn.app.pixelambientmusic.utils.extensions.requireContextCompat
 import java.io.File
 
 class BackupRestoreProvider: ContentProvider() {
@@ -38,15 +39,15 @@ class BackupRestoreProvider: ContentProvider() {
     }
 
     private val databaseFile by lazy {
-        requireContext().getDatabasePath("history_db")
+        requireContextCompat().getDatabasePath("history_db")
     }
 
     private val linearFile by lazy {
-        File(requireContext().cacheDir, "linear.db")
+        File(requireContextCompat().cacheDir, "linear.db")
     }
 
     private val linearv3File by lazy {
-        File(requireContext().cacheDir, "linear_v3.db")
+        File(requireContextCompat().cacheDir, "linear_v3.db")
     }
 
     private enum class Table {
