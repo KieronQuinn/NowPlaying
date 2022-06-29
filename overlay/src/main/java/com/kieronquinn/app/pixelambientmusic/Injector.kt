@@ -6,6 +6,7 @@ import com.kieronquinn.app.pixelambientmusic.components.albumart.AlbumArtRetriev
 import com.kieronquinn.app.pixelambientmusic.config.DeviceConfigOverrides
 import com.kieronquinn.app.pixelambientmusic.providers.LevelDbProvider
 import com.kieronquinn.app.pixelambientmusic.service.ServiceController
+import com.kieronquinn.app.pixelambientmusic.utils.extensions.clearDumpFiles
 import com.kieronquinn.app.pixelambientmusic.xposed.XposedHooks
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.lsposed.hiddenapibypass.HiddenApiBypass
@@ -18,7 +19,7 @@ import java.security.Security
 class Injector: AiaiApplication() {
 
     companion object {
-        const val DEBUG = true //TODO disable
+        const val DEBUG = false
     }
 
     override fun attachBaseContext(base: Context) {
@@ -29,6 +30,10 @@ class Injector: AiaiApplication() {
         ServiceController.createInstance(base)
         AlbumArtRetriever.createInstance(base)
         XposedHooks.setupHooks(base)
+        if(!DEBUG){
+            //Clean up any previously left over dump files
+            base.clearDumpFiles()
+        }
         super.attachBaseContext(base)
     }
 
