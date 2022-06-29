@@ -9,6 +9,12 @@ fun Context.dumpToFile(name: String, bytes: ByteArray) {
     }
 }
 
+fun Context.clearDumpFiles() {
+    filesDir.listFiles()?.filter { it.extension == "bin" }?.forEach {
+        it.delete()
+    }
+}
+
 fun Context.getVersion(): Long {
     return packageManager.getPackageInfo(packageName, 0).longVersionCode
 }
