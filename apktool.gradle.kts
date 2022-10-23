@@ -122,12 +122,6 @@ fun copySmaliDirs(from: File, to: File) {
     }
 }
 
-fun copyRawSmaliDirs(from: File, to: File) {
-    from.listFiles().forEach { folder ->
-        folder.copyRecursively(File(to, folder.name), true)
-    }
-}
-
 fun copyResDir(from: File, to: File) {
     from.copyRecursively(File(to, "res"), true)
 }
@@ -268,7 +262,6 @@ task("copyOverlay"){
     val decompiledDir = File(overlayBuild, "decompiled")
     val overlaySrc = File(overlayModule, "src")
     val overlaySrcMain = File(overlaySrc, "main")
-    val rawSmaliDir = File(overlaySrcMain, "smali")
     val rawResDir = File(overlaySrcMain, "res-overlay")
     val apktoolYml = File(baseDir, "apktool.yml")
     doLast {
@@ -279,7 +272,6 @@ task("copyOverlay"){
         modifyApktoolYml(apktoolYml)
         copySmaliDirs(decompiledDir, baseDir)
         copyResDir(rawResDir, baseDir)
-        copyRawSmaliDirs(rawSmaliDir, baseDir)
         copyAssetsDir(decompiledDir, baseDir)
         copyLibsDir(decompiledDir, baseDir)
         copyLibsDir(overlaySrcMain, baseDir)
