@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kieronquinn.app.pixelambientmusic"
-    android:compileSdkVersion="32"
+    android:compileSdkVersion="33"
     android:compileSdkVersionCodename="Tiramisu">
 
     <permission
@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="com.kieronquinn.app.pixelambientmusic.ACCESS_SERVICE" />
     <uses-permission android:name="com.kieronquinn.app.ambientmusicmod.ACCESS_SERVICE" />
 
@@ -49,6 +50,7 @@
             android:exported="true"
             android:icon="@drawable/product_logo_now_playing_color_48"
             android:label="@string/history_activity_title"
+            android:enableOnBackInvokedCallback="true"
             android:launchMode="singleTask"
             android:theme="@style/AmbientMusicSettingsTheme">
             <intent-filter>
@@ -244,8 +246,26 @@
             android:name="com.google.android.apps.miphone.aiai.adaptiveaudio.settings.ui.AdaptiveAudioSettingsActivity"
             android:enabled="false"
             android:exported="false" />
+
         <service
             android:name="com.google.android.apps.miphone.aiai.interestsmodel.storage.privacy.TtlExpiryService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name="com.google.android.apps.miphone.aiai.common.brella.service.AiAiExampleStoreTtlService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name="com.google.android.apps.miphone.aiai.fedass.ekho.service.EkhoTtlService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name="com.google.android.apps.miphone.aiai.notifications.scheduler.impl.NotificationJobService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 

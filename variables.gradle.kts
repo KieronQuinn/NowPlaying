@@ -1,8 +1,8 @@
-val versionName = "1.0.3"
-val versionCode = 103
+val versionName = "1.1"
+val versionCode = 110
 val minSdk = 28
-val targetSdk = 31
-val supportedAbis = arrayOf("arm64-v8a", "armeabi-v7a")
+val targetSdk = 33
+val supportedAbis = arrayOf("arm64-v8a", "armeabi-v7a", "x86_64")
 
 val smaliReplacements = arrayOf(
     //Add NNFP init for armv7
@@ -37,6 +37,27 @@ val dynamicSmaliReplacements = arrayOf(
         "(Landroid/view/accessibility/AccessibilityNodeInfo\\\$AccessibilityAction;->ACTION_IME_ENTER)",
         "Lcom/kieronquinn/app/pixelambientmusic/utils/SmaliUtils;->ACTION_IME_ENTER"
     ),
+    //Redirect accessibility for Android 12
+    Triple(
+        "Landroid/view/accessibility/AccessibilityNodeInfo\$AccessibilityAction;->ACTION_DRAG_START",
+        "(Landroid/view/accessibility/AccessibilityNodeInfo\\\$AccessibilityAction;->ACTION_DRAG_START)",
+        "Lcom/kieronquinn/app/pixelambientmusic/utils/SmaliUtils;->ACTION_DRAG_START"
+    ),
+    Triple(
+        "Landroid/view/accessibility/AccessibilityNodeInfo\$AccessibilityAction;->ACTION_DRAG_DROP",
+        "(Landroid/view/accessibility/AccessibilityNodeInfo\\\$AccessibilityAction;->ACTION_DRAG_DROP)",
+        "Lcom/kieronquinn/app/pixelambientmusic/utils/SmaliUtils;->ACTION_DRAG_DROP"
+    ),
+    Triple(
+        "Landroid/view/accessibility/AccessibilityNodeInfo\$AccessibilityAction;->ACTION_DRAG_CANCEL",
+        "(Landroid/view/accessibility/AccessibilityNodeInfo\\\$AccessibilityAction;->ACTION_DRAG_CANCEL)",
+        "Lcom/kieronquinn/app/pixelambientmusic/utils/SmaliUtils;->ACTION_DRAG_CANCEL"
+    ),
+    Triple(
+        "Landroid/view/accessibility/AccessibilityNodeInfo\$AccessibilityAction;->ACTION_SHOW_TEXT_SUGGESTIONS",
+        "(Landroid/view/accessibility/AccessibilityNodeInfo\\\$AccessibilityAction;->ACTION_SHOW_TEXT_SUGGESTIONS)",
+        "Lcom/kieronquinn/app/pixelambientmusic/utils/SmaliUtils;->ACTION_SHOW_TEXT_SUGGESTIONS"
+    ),
     //Redirect state description for Android 10
     Triple(
         "invoke-virtual {p0}, Landroid/view/View;->getStateDescription()Ljava/lang/CharSequence;",
@@ -52,6 +73,78 @@ val dynamicSmaliReplacements = arrayOf(
         "invoke-virtual {v2, v1}, Landroid/view/accessibility/AccessibilityNodeInfo;->setStateDescription(Ljava/lang/CharSequence;)V",
         "(invoke-virtual \\{v2, v1\\}, Landroid/view/accessibility/AccessibilityNodeInfo;->setStateDescription\\(Ljava/lang/CharSequence;\\)V)",
         "invoke-static {v2, v1}, Lcom/kieronquinn/app/pixelambientmusic/utils/SmaliUtils;->setStateDescription(Landroid/view/accessibility/AccessibilityNodeInfo;Ljava/lang/CharSequence;)V"
+    ),
+    //Redirect system audio captioning check to isEnabled, we don't provide captions anyway
+    Triple(
+        "Landroid/view/accessibility/CaptioningManager;->isSystemAudioCaptioningEnabled()Z",
+        "(Landroid/view/accessibility/CaptioningManager;->isSystemAudioCaptioningEnabled\\(\\)Z)",
+        "Landroid/view/accessibility/CaptioningManager;->isEnabled()Z"
+    ),
+    //Redirect system audio captioning UI check to isEnabled, we don't provide captions anyway
+    Triple(
+        "Landroid/view/accessibility/CaptioningManager;->isSystemAudioCaptioningUiEnabled()Z",
+        "(Landroid/view/accessibility/CaptioningManager;->isSystemAudioCaptioningUiEnabled\\(\\)Z)",
+        "Landroid/view/accessibility/CaptioningManager;->isEnabled()Z"
+    ),
+    //Redirect call captioning check to isEnabled, we don't provide captions anyway
+    Triple(
+        "Landroid/view/accessibility/CaptioningManager;->isCallCaptioningEnabled()Z",
+        "(Landroid/view/accessibility/CaptioningManager;->isCallCaptioningEnabled\\(\\)Z)",
+        "Landroid/view/accessibility/CaptioningManager;->isEnabled()Z"
+    ),
+    //Redirect PackageInfoFlags to compat model
+    Triple(
+        "Landroid/content/pm/PackageManager\$ApplicationInfoFlags;->of(J)Landroid/content/pm/PackageManager\$ApplicationInfoFlags",
+        "(Landroid/content/pm/PackageManager\\\$ApplicationInfoFlags;->of\\(J\\)Landroid/content/pm/PackageManager\\\$ApplicationInfoFlags)",
+        "Lcom/kieronquinn/app/pixelambientmusic/utils/compat/PackageManagerCompat\$ApplicationInfoFlags;->of(J)Lcom/kieronquinn/app/pixelambientmusic/utils/compat/PackageManagerCompat\$ApplicationInfoFlags"
+    ),
+    //Redirect calls to PackageManager.getApplicationInfo to the compat method w/ the compat model
+    Triple(
+        "invoke-virtual {p1, v0, v1}, Landroid/content/pm/PackageManager;->getApplicationInfo(Ljava/lang/String;Landroid/content/pm/PackageManager\$ApplicationInfoFlags;)Landroid/content/pm/ApplicationInfo;",
+        "(invoke-virtual \\{p1, v0, v1\\}, Landroid/content/pm/PackageManager;->getApplicationInfo\\(Ljava/lang/String;Landroid/content/pm/PackageManager\\\$ApplicationInfoFlags;\\)Landroid/content/pm/ApplicationInfo;)",
+        "invoke-static {p1, v0, v1}, Lcom/kieronquinn/app/pixelambientmusic/utils/compat/PackageManagerCompat;->getApplicationInfo(Landroid/content/pm/PackageManager;Ljava/lang/String;Lcom/kieronquinn/app/pixelambientmusic/utils/compat/PackageManagerCompat\$ApplicationInfoFlags;)Landroid/content/pm/ApplicationInfo;"
+    ),
+    //Redirect calls to SpeechRecognizer.isOnDeviceRecognitionAvailable to compat
+    Triple(
+        "Landroid/speech/SpeechRecognizer;->isOnDeviceRecognitionAvailable(Landroid/content/Context;)Z",
+        "(Landroid/speech/SpeechRecognizer;->isOnDeviceRecognitionAvailable\\(Landroid/content/Context;\\)Z)",
+        "Lcom/kieronquinn/app/pixelambientmusic/utils/compat/SpeechRecognizerCompat;->isOnDeviceRecognitionAvailable(Landroid/content/Context;)Z"
+    ),
+    //Redirect calls to getOnBackInvokedDispatcher to compat method
+    Triple(
+        "getOnBackInvokedDispatcher()Landroid/window/OnBackInvokedDispatcher;",
+        "(invoke-virtual .*;->getOnBackInvokedDispatcher\\(\\)Landroid/window/OnBackInvokedDispatcher;)",
+        "invoke-static {p0}, Lcom/kieronquinn/app/pixelambientmusic/utils/compat/ActivityCompat;->getOnBackInvokedDispatcher(Ljava/lang/Object;)Landroid/window/OnBackInvokedDispatcher;"
+    ),
+    //Redirect new SOC_MODEL field
+    Triple(
+        "Landroid/os/Build;->SOC_MODEL:Ljava/lang/String;",
+        "(Landroid/os/Build;->SOC_MODEL:Ljava/lang/String;)",
+        "Lcom/kieronquinn/app/pixelambientmusic/utils/compat/BuildCompat;->SOC_MODEL:Ljava/lang/String;"
+    ),
+    //Redirect SdkExtensions to compat
+    Triple(
+        "Landroid/os/ext/SdkExtensions;->getExtensionVersion(I)I",
+        "(Landroid/os/ext/SdkExtensions;->getExtensionVersion\\(I\\)I)",
+        "Lcom/kieronquinn/app/pixelambientmusic/utils/compat/SdkExtensionsCompat;->getExtensionVersion(I)I"
+    ),
+    //Redirect setDecorFitsSystemWindows to compat
+    Triple(
+        "Landroid/view/Window;->setDecorFitsSystemWindows(Z)V",
+        "(invoke-virtual \\{p0, p1\\}, Landroid/view/Window;->setDecorFitsSystemWindows\\(Z\\)V)",
+        "invoke-static {p0, p1}, Lcom/kieronquinn/app/pixelambientmusic/utils/compat/WindowCompat;->setDecorFitsSystemWindows(Landroid/view/Window;Z)V"
+    ),
+    //Redirect Outline.setPath to compat
+    Triple(
+        "Landroid/graphics/Outline;->setPath(Landroid/graphics/Path;)V",
+        "(invoke-virtual \\{p1, v0\\}, Landroid/graphics/Outline;->setPath\\(Landroid/graphics/Path;\\)V)",
+        "invoke-static {p1, v0}, Lcom/kieronquinn/app/pixelambientmusic/utils/compat/OutlineCompat;->setPath(Landroid/graphics/Outline;Landroid/graphics/Path;)V"
+    ),
+    //Redirect ShortcutInfo.Builder.setExcludedFromSurfaces to compat
+    Triple(
+        "Landroid/content/pm/ShortcutInfo\$Builder;->setExcludedFromSurfaces(I)Landroid/content/pm/ShortcutInfo\$Builder",
+        "(invoke-virtual \\{v0, v1\\}, Landroid/content/pm/ShortcutInfo\\\$Builder;->setExcludedFromSurfaces\\(I\\)Landroid/content/pm/ShortcutInfo\\\$Builder)",
+        "invoke-static {v0, v1}, Lcom/kieronquinn/app/pixelambientmusic/utils/compat/ShortcutInfoCompat;->setExcludedFromSurfaces(Landroid/content/pm/ShortcutInfo\$Builder;I)Landroid/content/pm/ShortcutInfo\$Builder"
     )
 )
 
