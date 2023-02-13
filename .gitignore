@@ -282,7 +282,10 @@ base.apk
 ##Tools dir
 tools/*
 
-##libsense and libleveldbjni for armv7
+##libsense and libleveldbjni for armv7 + x86_64
 libsense.so
 libleveldbjni.so
+
+##libmodeleditor-jni for x86_64
+libmodeleditor-jni.so
 

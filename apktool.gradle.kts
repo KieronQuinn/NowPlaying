@@ -183,12 +183,25 @@ fun modifySmaliWithRegex(smaliDir: File) {
                 file.readText().contains(replacement.first)
             }?.forEach { file ->
                 println("Checking file ${file.name}")
-                val content = file.readText()
-                    .replaceGroup(replacement.second, 1, replacement.third)
+                val content = replaceAll(
+                    file.readText(),
+                    replacement.first,
+                    replacement.second,
+                    1,
+                    replacement.third
+                )
                 file.writeText(content)
             }
         }
     }
+}
+
+fun replaceAll(inString: String, search: String, replace: String, group: Int, replaceWith: String): String {
+    var newString = inString
+    while(newString.contains(search)){
+        newString = newString.replaceGroup(replace, group, replaceWith)
+    }
+    return newString
 }
 
 /**

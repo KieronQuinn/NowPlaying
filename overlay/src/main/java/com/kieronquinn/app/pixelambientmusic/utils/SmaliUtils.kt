@@ -17,6 +17,18 @@ object SmaliUtils {
     @JvmField
     val ACTION_IME_ENTER: AccessibilityNodeInfo.AccessibilityAction? = null
 
+    @JvmField
+    val ACTION_DRAG_START: AccessibilityNodeInfo.AccessibilityAction? = null
+
+    @JvmField
+    val ACTION_DRAG_DROP: AccessibilityNodeInfo.AccessibilityAction? = null
+
+    @JvmField
+    val ACTION_DRAG_CANCEL: AccessibilityNodeInfo.AccessibilityAction? = null
+
+    @JvmField
+    val ACTION_SHOW_TEXT_SUGGESTIONS: AccessibilityNodeInfo.AccessibilityAction? = null
+
     @JvmStatic
     fun setDecorFitsSystemWindows(window: Window){
         WindowCompat.setDecorFitsSystemWindows(window, false)
