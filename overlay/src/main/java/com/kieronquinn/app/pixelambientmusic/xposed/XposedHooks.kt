@@ -21,6 +21,7 @@ abstract class XposedHooks {
                 AstreaHooks(),
                 AudioRecordHooks(),
                 AudioRecordingConfigurationHooks(),
+                ComponentNameHooks(),
                 ContextHooks(),
                 ContextImplHooks(),
                 CpuUtilsHooks(),

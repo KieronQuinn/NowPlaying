@@ -17,7 +17,6 @@ class RuntimeHooks(context: Context): XposedHooks() {
             "deepclu_jni_aiai",
             "lang_id_jni_model_less_native",
             "aiai_vkp",
-            "sense_nnfp_v3",
             "deepclu_jni_aiai",
             "geller_jni_lite_lib",
             "cpuutils",
@@ -35,7 +34,7 @@ class RuntimeHooks(context: Context): XposedHooks() {
         if(DENYLIST.contains(libName)){
             return@MethodHook MethodResult.Replace(Unit)
         }
-        if(!isArmv7 || !isX86_64) return@MethodHook MethodResult.Skip()
+        if(!isArmv7 && !isX86_64) return@MethodHook MethodResult.Skip()
         if(DENYLIST_ARMV7.contains(libName)){
             return@MethodHook MethodResult.Replace(Unit)
         }
