@@ -1,4 +1,4 @@
-val versionName = "1.1"
+val versionName = "1.1.1"
 val versionCode = 110
 val minSdk = 28
 val targetSdk = 33
