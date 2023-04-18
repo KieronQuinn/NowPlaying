@@ -16,10 +16,8 @@ class ComponentNameHooks: XposedHooks() {
     override val clazz = ComponentName::class.java
 
     private fun constructor_pname_class(packageName: String, clazz: String) = MethodHook {
-        Log.d("CNH", "ComponentName: $packageName, $clazz")
         if(packageName == PACKAGE_NAME_AS && clazz == CLASS_NAME_HISTORY) {
             args[0] = BuildConfig.APPLICATION_ID
-            Log.d("CNH", "Replacing package with ${BuildConfig.APPLICATION_ID}")
         }
         MethodResult.Skip<Unit>()
     }

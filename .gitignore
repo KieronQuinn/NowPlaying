@@ -284,6 +284,7 @@ tools/*
 
 ##libsense and libleveldbjni for armv7 + x86_64
 libsense.so
+libsense_nnfp_v3.so
 libleveldbjni.so
 
 ##libmodeleditor-jni for x86_64

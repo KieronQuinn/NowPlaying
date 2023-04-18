@@ -23,10 +23,6 @@ class GellerHooks: XposedHooks() {
         MethodResult.Replace(0L)
     }
 
-    private fun nativeCreateDatabase(a: GellerDatabase, b: String) = MethodHook {
-        MethodResult.Replace(0L)
-    }
-
     fun nativeDelete(a: Long, b: Long, c: String?, d: ByteArray?) = MethodHook {
         MethodResult.Replace(0L)
     }

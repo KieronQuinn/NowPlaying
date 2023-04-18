@@ -1,8 +1,10 @@
 package com.kieronquinn.app.pixelambientmusic.xposed.hooks
 
 import android.content.Context
+import android.util.Log
 import com.google.audio.ambientmusic.NnfpRecognizer
 import com.google.audio.ambientmusic.NnfpRecognizerCallback
+import com.kieronquinn.app.pixelambientmusic.config.DeviceConfigOverrides
 
 class NnfpHooks(context: Context): BaseNnfpHooks(context) {
     override val clazz = NnfpRecognizer::class.java
@@ -22,6 +24,9 @@ class NnfpHooks(context: Context): BaseNnfpHooks(context) {
         callback: NnfpRecognizerCallback,
         runOnSmallCores: Boolean
     ): MethodHook<ByteArray?> {
+        if(DeviceConfigOverrides.isLoggingEnabled()){
+            Log.d("NNFP", "Recognising using NNFP")
+        }
         return super.recognize(id, audio, previousMatch, callback, runOnSmallCores)
     }
 
