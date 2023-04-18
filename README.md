@@ -11,7 +11,7 @@ Now Playing is a modified version of Android System Intelligence, running only t
 > Note: If you are building Now Playing yourself, you **must** also build Ambient Music Mod, since the signatures have to match for security reasons.
 
 1. Clone the repository as normal
-2. Download the latest original Pixel 7 APK of Android System Intelligence from [APKmirror](https://www.apkmirror.com/apk/google-inc/device-personalization-services/). (Note: At the time of writing, the build "U.0.droidfood.pixel6.514591756" was being used for the prebuilt APKs. Newer versions have not been tested.)
+2. Download the latest original Pixel 7 APK of Android System Intelligence from [APKmirror](https://www.apkmirror.com/apk/google-inc/device-personalization-services/). (Note: At the time of writing, the build "U.0.droidfood.pixel6.514591756" was being used for the prebuilt APKs, since no Pixel 7 "U" build was available. Newer versions have not been tested.)
 
 > Note: If you wish to include armv7 support, in addition download [this](https://www.apkmirror.com/apk/google-inc/pixel-ambient-services/pixel-ambient-services-1-0-181470108-release/pixel-ambient-services-1-0-181470108-android-apk-download/) version of Pixel Ambient Services, and place `libsense.so` from it in `overlay/src/main/lib/armeabi-v7a`, as well as [this](https://www.apkmirror.com/apk/google-inc/google-play-services/google-play-services-22-22-55-release/google-play-services-22-22-55-020300-453326789-android-apk-download/) version of Google Play services, and place `libleveldbjni.so` from it in the same directory.
 
