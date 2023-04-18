@@ -61,7 +61,11 @@ abstract class BaseNnfpHooks(private val context: Context): XposedHooks() {
     open fun addOnDemandRecognizedTrack(
         pointer: Long,
         input: ByteArray
-    ) = MethodHook({
+    ) = MethodHook(beforeHookedMethod =
+    {
+        LevelDbProvider.notifyLinear(context)
+        MethodResult.Skip()
+    }, afterHookedMethod = {
         val resultData = it as ByteArray
         if(Injector.DEBUG) {
             context.dumpToFile("on_demand_add_input.bin", input)

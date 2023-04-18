@@ -8,6 +8,7 @@ message Tracks {
 
   message TrackContainer {
     Track track = 1;
+    int32 extra = 2;
 
     message Track {
       TrackMetadata metadata = 1;

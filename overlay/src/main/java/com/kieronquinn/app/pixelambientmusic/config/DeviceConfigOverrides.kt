@@ -67,4 +67,22 @@ object DeviceConfigOverrides {
         return getValue("NowPlaying__enable_logging")?.toBoolean() ?: false
     }
 
+    fun getPrimaryLanguage(): String {
+        return getValue("NowPlaying__device_country")!!
+    }
+
+    fun getExtraLanguages(): List<String> {
+        return getValue("NowPlaying__ambient_music_extra_languages")
+            ?.splitByComma() ?: emptyList()
+    }
+
+    private fun String.splitByComma(): List<String> {
+        if(isBlank()) return emptyList()
+        return if(!contains(",")){
+            listOf(this)
+        } else {
+            split(",")
+        }
+    }
+
 }

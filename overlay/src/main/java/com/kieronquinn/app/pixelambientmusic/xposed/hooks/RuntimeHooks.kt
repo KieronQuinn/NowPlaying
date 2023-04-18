@@ -34,7 +34,7 @@ class RuntimeHooks(context: Context): XposedHooks() {
         if(DENYLIST.contains(libName)){
             return@MethodHook MethodResult.Replace(Unit)
         }
-        if(!isArmv7 && !isX86_64) return@MethodHook MethodResult.Skip()
+        if(!isArmv7) return@MethodHook MethodResult.Skip()
         if(DENYLIST_ARMV7.contains(libName)){
             return@MethodHook MethodResult.Replace(Unit)
         }

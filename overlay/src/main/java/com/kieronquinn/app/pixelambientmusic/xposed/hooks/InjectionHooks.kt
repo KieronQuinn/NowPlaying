@@ -31,7 +31,8 @@ class InjectionHooks: XposedHooks() {
 
         private val INJECTED_HOOKS: Map<String, InjectedHooks> = arrayOf(
             AlbumArtDialogHooks,
-            CloudApiHooks
+            CloudApiHooks,
+            SecondaryLanguagesSlicingDelegateHooks,
         ).associateBy {
             it.label
         }

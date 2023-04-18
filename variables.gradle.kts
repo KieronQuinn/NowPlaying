@@ -1,5 +1,5 @@
-val versionName = "1.1.1"
-val versionCode = 110
+val versionName = "1.2"
+val versionCode = 120
 val minSdk = 28
 val targetSdk = 33
 val supportedAbis = arrayOf("arm64-v8a", "armeabi-v7a", "x86_64")
@@ -22,7 +22,7 @@ val smaliReplacements = arrayOf(
         "com/google/intelligence/sense/ambientmusic/history/HistoryActivity.smali",
         ", L(.*)\\(Landroid/view/Window;\\)V",
         "com/kieronquinn/app/pixelambientmusic/utils/SmaliUtils;->setDecorFitsSystemWindows"
-    )
+    ),
 )
 
 val dynamicSmaliReplacements = arrayOf(
@@ -104,6 +104,12 @@ val dynamicSmaliReplacements = arrayOf(
         "(invoke-virtual \\{p1, v0, v1\\}, Landroid/content/pm/PackageManager;->getApplicationInfo\\(Ljava/lang/String;Landroid/content/pm/PackageManager\\\$ApplicationInfoFlags;\\)Landroid/content/pm/ApplicationInfo;)",
         "invoke-static {p1, v0, v1}, Lcom/kieronquinn/app/pixelambientmusic/utils/compat/PackageManagerCompat;->getApplicationInfo(Landroid/content/pm/PackageManager;Ljava/lang/String;Lcom/kieronquinn/app/pixelambientmusic/utils/compat/PackageManagerCompat\$ApplicationInfoFlags;)Landroid/content/pm/ApplicationInfo;"
     ),
+    //Redirect calls to PackageManager.getApplicationInfo to the compat method w/ the compat model
+    Triple(
+        "invoke-virtual {p1, v1, v3}, Landroid/content/pm/PackageManager;->getApplicationInfo(Ljava/lang/String;Landroid/content/pm/PackageManager\$ApplicationInfoFlags;)Landroid/content/pm/ApplicationInfo;",
+        "(invoke-virtual \\{p1, v1, v3\\}, Landroid/content/pm/PackageManager;->getApplicationInfo\\(Ljava/lang/String;Landroid/content/pm/PackageManager\\\$ApplicationInfoFlags;\\)Landroid/content/pm/ApplicationInfo;)",
+        "invoke-static {p1, v1, v3}, Lcom/kieronquinn/app/pixelambientmusic/utils/compat/PackageManagerCompat;->getApplicationInfo(Landroid/content/pm/PackageManager;Ljava/lang/String;Lcom/kieronquinn/app/pixelambientmusic/utils/compat/PackageManagerCompat\$ApplicationInfoFlags;)Landroid/content/pm/ApplicationInfo;"
+    ),
     //Redirect calls to SpeechRecognizer.isOnDeviceRecognitionAvailable to compat
     Triple(
         "Landroid/speech/SpeechRecognizer;->isOnDeviceRecognitionAvailable(Landroid/content/Context;)Z",
@@ -145,6 +151,18 @@ val dynamicSmaliReplacements = arrayOf(
         "Landroid/content/pm/ShortcutInfo\$Builder;->setExcludedFromSurfaces(I)Landroid/content/pm/ShortcutInfo\$Builder",
         "(invoke-virtual \\{v0, v1\\}, Landroid/content/pm/ShortcutInfo\\\$Builder;->setExcludedFromSurfaces\\(I\\)Landroid/content/pm/ShortcutInfo\\\$Builder)",
         "invoke-static {v0, v1}, Lcom/kieronquinn/app/pixelambientmusic/utils/compat/ShortcutInfoCompat;->setExcludedFromSurfaces(Landroid/content/pm/ShortcutInfo\$Builder;I)Landroid/content/pm/ShortcutInfo\$Builder"
+    ),
+    //Redirect Configuration.fontWeightAdjustment
+    Triple(
+        "iget p0, p0, Landroid/content/res/Configuration;->fontWeightAdjustment:I",
+        "(iget p0, p0, Landroid/content/res/Configuration;->fontWeightAdjustment:I)",
+        "sget p0, Lcom/kieronquinn/app/pixelambientmusic/utils/compat/ConfigurationCompat;->fontWeightAdjustment:I"
+    ),
+    //Increase Now Playing superpacks quota to long limit (effectively infinite)
+    Triple(
+        "const-wide/32 v5, 0x25800000",
+        "(const-wide/32 v5, 0x25800000)",
+        "const-wide v5, 0x7fffffffffffffffL"
     )
 )
 
