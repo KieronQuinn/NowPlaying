@@ -1,12 +1,14 @@
 package com.kieronquinn.app.pixelambientmusic.providers
 
 import android.app.job.JobScheduler
-import android.content.*
+import android.content.ContentProvider
+import android.content.ContentValues
+import android.content.Context
+import android.content.SharedPreferences
+import android.content.UriMatcher
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
-import android.util.Log
-import com.google.audio.ambientmusic.Linear
 import com.google.audio.ambientmusic.Linear.Tracks
 import com.google.audio.ambientmusic.ShardTracks
 import com.kieronquinn.app.pixelambientmusic.components.settings.SettingsStateHandler
@@ -14,7 +16,6 @@ import com.kieronquinn.app.pixelambientmusic.config.DeviceConfigOverrides
 import com.kieronquinn.app.pixelambientmusic.utils.extensions.getVersion
 import com.kieronquinn.app.pixelambientmusic.utils.extensions.requireContextCompat
 import com.kieronquinn.app.pixelambientmusic.xposed.hooks.JobSchedulerHooks
-import com.kieronquinn.app.pixelambientmusic.xposed.hooks.LevelDbHooks
 import org.iq80.leveldb.table.BytewiseComparator
 import org.iq80.leveldb.table.FileChannelTable
 import org.json.JSONArray
@@ -298,7 +299,7 @@ class LevelDbProvider: ContentProvider() {
                 COLUMN_DATABASE
             )
         )
-        databases.entries.toTracks().merge().forEach { pair ->
+        databases.entries.toTracks().forEach { pair ->
             val track = pair.second
             val row = arrayOf(
                 track.dbId,
@@ -341,34 +342,6 @@ class LevelDbProvider: ContentProvider() {
             this@toJsonArray.forEach {
                 put(it.url)
             }
-        }
-    }
-
-    private fun List<Pair<String, ShardTracks.Track>>.merge(): List<Pair<String, ShardTracks.Track>> {
-        //Merge the lists, then group by the shared ID and create the best track
-        return groupBy {
-            it.second.dbId
-        }.map {
-            it.value.createBest()
-        }
-    }
-
-    private fun List<Pair<String, ShardTracks.Track>>.createBest(): Pair<String, ShardTracks.Track> {
-        return ShardTracks.Track.newBuilder().apply {
-            val first = first().second
-            dbId = first.dbId
-            id = first.id
-            trackName = first.trackName
-            artist = first.artist
-            googleId = first.googleId
-            addAllPlayer(
-                firstOrNull { first.playerList.isNotEmpty() }?.second?.playerList
-                    ?: emptyList<ShardTracks.Track.Player>()
-            )
-            album = firstOrNull { first.album != null }?.second?.album
-            year = firstOrNull { first.year != 0 }?.second?.year ?: 0
-        }.build().let {
-            Pair(first().first, it)
         }
     }
 
