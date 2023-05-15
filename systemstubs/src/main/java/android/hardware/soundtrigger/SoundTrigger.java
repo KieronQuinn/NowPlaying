@@ -565,6 +565,18 @@ public class SoundTrigger {
             throw new RuntimeException("Stub!");
         }
 
+        //Android 14+
+        public GenericRecognitionEvent(int status, int soundModelHandle, boolean captureAvailable,
+                                       int captureSession, int captureDelayMs,
+                                       int capturePreambleMs, boolean triggerInData,
+                                       AudioFormat captureFormat,
+                                       byte[] data, long halEventReceivedMillis) {
+            super(status, soundModelHandle, captureAvailable, captureSession,
+                    captureDelayMs, capturePreambleMs, triggerInData, captureFormat,
+                    data);
+            throw new RuntimeException("Stub!");
+        }
+
         public static final @NonNull Creator<GenericRecognitionEvent> CREATOR
                 = new Creator<GenericRecognitionEvent>() {
             public GenericRecognitionEvent createFromParcel(Parcel in) {

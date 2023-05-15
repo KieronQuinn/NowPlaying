@@ -1,5 +1,6 @@
 package com.kieronquinn.app.pixelambientmusic.service
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.*
 import android.hardware.soundtrigger.SoundTrigger
@@ -9,6 +10,7 @@ import android.media.soundtrigger.ISoundTriggerDetectionService
 import android.os.IBinder
 import android.os.ParcelUuid
 import android.os.RemoteException
+import androidx.core.os.BuildCompat
 import com.google.intelligence.sense.ambientmusic.AmbientMusicDetector
 import com.google.intelligence.sense.ondemand.InternalBroadcastReceiver
 import com.kieronquinn.app.pixelambientmusic.IRecognitionCallback
@@ -104,17 +106,40 @@ class RecognitionService: Service(), SharedPreferences.OnSharedPreferenceChangeL
             setEncoding(AudioFormat.ENCODING_PCM_16BIT)
             setChannelMask(AudioFormat.CHANNEL_IN_MONO)
         }.build()
-        return SoundTrigger.GenericRecognitionEvent(
-            0,
-            0,
-            true,
-            audioSessionId,
-            0,
-            0,
-            false,
-            audioFormat,
-            ByteArray(0)
-        )
+        return createGenericRecognitionEvent(audioSessionId, audioFormat)
+    }
+
+    @SuppressLint("UnsafeOptInUsageError")
+    private fun createGenericRecognitionEvent(
+        audioSessionId: Int,
+        audioFormat: AudioFormat
+    ): SoundTrigger.GenericRecognitionEvent {
+        return if(BuildCompat.isAtLeastU()){
+            SoundTrigger.GenericRecognitionEvent(
+                0,
+                0,
+                true,
+                audioSessionId,
+                0,
+                0,
+                false,
+                audioFormat,
+                ByteArray(0),
+                System.currentTimeMillis()
+            )
+        }else{
+            SoundTrigger.GenericRecognitionEvent(
+                0,
+                0,
+                true,
+                audioSessionId,
+                0,
+                0,
+                false,
+                audioFormat,
+                ByteArray(0)
+            )
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPrefs: SharedPreferences?, key: String) {
