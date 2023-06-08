@@ -10,7 +10,7 @@ apply {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.kieronquinn.app.pixelambientmusic"

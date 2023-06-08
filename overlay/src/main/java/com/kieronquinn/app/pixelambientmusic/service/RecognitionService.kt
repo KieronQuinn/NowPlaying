@@ -7,6 +7,7 @@ import android.hardware.soundtrigger.SoundTrigger
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.soundtrigger.ISoundTriggerDetectionService
+import android.os.Build
 import android.os.IBinder
 import android.os.ParcelUuid
 import android.os.RemoteException
@@ -114,7 +115,7 @@ class RecognitionService: Service(), SharedPreferences.OnSharedPreferenceChangeL
         audioSessionId: Int,
         audioFormat: AudioFormat
     ): SoundTrigger.GenericRecognitionEvent {
-        return if(BuildCompat.isAtLeastU()){
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE){
             SoundTrigger.GenericRecognitionEvent(
                 0,
                 0,
@@ -142,8 +143,8 @@ class RecognitionService: Service(), SharedPreferences.OnSharedPreferenceChangeL
         }
     }
 
-    override fun onSharedPreferenceChanged(sharedPrefs: SharedPreferences?, key: String) {
-        if(SettingsStateHandler.isImportantPreference(key)){
+    override fun onSharedPreferenceChanged(sharedPrefs: SharedPreferences?, key: String?) {
+        if(SettingsStateHandler.isImportantPreference(key ?: return)){
             SettingsProvider.notifyUpdate(this)
         }
     }
