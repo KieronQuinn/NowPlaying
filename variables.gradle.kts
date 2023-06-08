@@ -1,5 +1,5 @@
-val versionName = "1.3"
-val versionCode = 130
+val versionName = "1.3.1"
+val versionCode = 131
 val minSdk = 28
 val targetSdk = 33
 val supportedAbis = arrayOf("arm64-v8a", "armeabi-v7a", "x86_64")
