@@ -23,11 +23,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+    buildFeatures {
+        aidl = true
+    }
+    namespace = "com.google.intelligence.systemstubs"
 }
 
 dependencies {
-    implementation("androidx.annotation:annotation:1.3.0")
+    implementation("androidx.annotation:annotation:1.7.1")
 }
