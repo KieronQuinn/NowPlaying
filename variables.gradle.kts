@@ -1,5 +1,5 @@
-val versionName = "1.3.1"
-val versionCode = 131
+val versionName = "1.3.2"
+val versionCode = 132
 val minSdk = 28
 val targetSdk = 33
 val supportedAbis = arrayOf("arm64-v8a", "armeabi-v7a", "x86_64")
@@ -22,6 +22,12 @@ val smaliReplacements = arrayOf(
         "com/google/intelligence/sense/ambientmusic/history/HistoryActivity.smali",
         ", L(.*)\\(Landroid/view/Window;\\)V",
         "com/kieronquinn/app/pixelambientmusic/utils/SmaliUtils;->setDecorFitsSystemWindows"
+    ),
+    //Redirect View.setWindowInsetsAnimationCallback to compat
+    Triple(
+        "com/google/android/material/bottomsheet/BottomSheetBehavior.smali",
+        "(invoke-virtual \\{p2, v3\\}, Landroid/view/View;->setWindowInsetsAnimationCallback\\(Landroid/view/WindowInsetsAnimation\\\$Callback;\\)V)",
+        "invoke-static {p2, v3}, Lcom/kieronquinn/app/pixelambientmusic/utils/compat/ViewCompat;->setWindowInsetsAnimationCallback(Landroid/view/View;Landroid/view/WindowInsetsAnimation\$Callback;)V"
     ),
 )
 

@@ -30,6 +30,9 @@ object MusicRecogniser {
                 State.RECOGNIZING -> {
                     callback.onRecognitionStarted()
                 }
+                State.IDLE -> {
+                    //No-op
+                }
             }
         }
     }
