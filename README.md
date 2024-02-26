@@ -32,4 +32,4 @@ build.tools.version=<the version of build tools to use, eg. 32.0.0>
 
 ## Sources
 
-This repository contains a local version of [dain/leveldb](https://github.com/dain/leveldb) ([Apache 2.0 licence](https://github.com/dain/leveldb/blob/master/license.txt)), as well as some of [canyie/Pine](https://github.com/canyie/pine)'s `xposed` module, due to package conflicts [Anti 996 licence](https://github.com/996icu/996.ICU/blob/master/LICENSE), embedding Apache Commons Lang ([Apache 2.0 licence](https://github.com/canyie/pine/blob/master/xposed/src/main/apacheCommonsLang/LICENSE.txt))
+This repository contains a local version of [dain/leveldb](https://github.com/dain/leveldb) ([Apache 2.0 licence](https://github.com/dain/leveldb/blob/master/license.txt)), as well as some of [canyie/Pine](https://github.com/canyie/pine)'s `xposed` module, due to package conflicts ([Anti 996 licence](https://github.com/996icu/996.ICU/blob/master/LICENSE)), embedding Apache Commons Lang ([Apache 2.0 licence](https://github.com/canyie/pine/blob/master/xposed/src/main/apacheCommonsLang/LICENSE.txt))
