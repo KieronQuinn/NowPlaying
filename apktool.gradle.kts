@@ -240,7 +240,7 @@ task<Exec>("decompileOverlay") {
     val overlayModule = File(project.rootDir, "overlay")
     val overlayBuild = File(overlayModule, "build")
     val overlayOutputs = File(overlayBuild, "outputs")
-    val overlayApkDir = File(overlayOutputs, "universal_apk")
+    val overlayApkDir = File(overlayOutputs, "apk_from_bundle")
     val overlayDebugApkDir = File(overlayApkDir, "debug")
     val overlayApk = File(overlayDebugApkDir, "overlay-debug-universal.apk")
     val decompiledDir = File(overlayBuild, "decompiled")
