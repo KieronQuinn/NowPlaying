@@ -3,9 +3,47 @@ package com.kieronquinn.app.pixelambientmusic.xposed
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import com.kieronquinn.app.pixelambientmusic.xposed.hooks.*
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
+import com.kieronquinn.app.pixelambientmusic.xposed.Xposed.MethodHookParam
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.AlbumArtCheckBoxHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.ApplicationPackageManagerHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.AstreaHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.AudioRecordHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.AudioRecordingConfigurationHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.ComponentNameHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.ContextHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.ContextImplHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.CpuUtilsHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.DeviceConfigHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.EkhoMaintenanceHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.EkhoWriterHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.EnumHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.FileHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.GellerHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.HistoryActivityHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.InjectionHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.JobInfoHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.JobSchedulerHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.LangIdJniModelLessHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.LearningControllerJniHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.LevelDbHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.LoggingHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.MusicRecognitionManagerHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.NativePipelineImplHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.NnfpHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.Nnfpv3Hooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.NotificationHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.ProcessNameHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.RuntimeHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.SensorPrivacyHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.SettingsHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.ShortcutManagerHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.SoundTriggerHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.SqliteHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.ThreadPoolExecutorHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.UriBuilderHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.UriMatcherHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.UserManagerHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.hooks.ViewHooks
 import java.lang.reflect.Member
 import java.lang.reflect.Method
 
@@ -108,11 +146,35 @@ abstract class XposedHooks {
         }
     }
 
-    private fun hookMethod(hook: Method, replace: Member) {
-        XposedBridge.deoptimizeMethod(hook)
-        XposedBridge.hookMethod(
-            replace,
-            object: XC_MethodHook() {
+    private fun hookMethod(hook: Method, member: Member) {
+        Xposed.deoptimizeMethod(hook)
+        Xposed.hookMethod(
+            member,
+            object: Xposed.MethodHook() {
+                override fun beforeHookedMethod(param: MethodHookParam) {
+                    val result = (hook.invoke(this@XposedHooks, *param.args) as MethodHook<*>)
+                        .beforeHookedMethod?.invoke(param, param.thisObject)
+                    if(result is MethodResult.Replace){
+                        param.result = result.value
+                    }
+                }
+
+                override fun afterHookedMethod(param: MethodHookParam) {
+                    val result = (hook.invoke(this@XposedHooks, *param.args) as MethodHook<*>)
+                        .afterHookedMethod?.invoke(param, param.result)
+                    if(result is MethodResult.Replace){
+                        param.result = result.value
+                    }
+                }
+            }
+        )
+    }
+
+    private fun replaceMethod(hook: Method, member: Member) {
+        Xposed.deoptimizeMethod(hook)
+        Xposed.hookMethod(
+            member,
+            object: Xposed.MethodHook() {
                 override fun beforeHookedMethod(param: MethodHookParam) {
                     val result = (hook.invoke(this@XposedHooks, *param.args) as MethodHook<*>)
                         .beforeHookedMethod?.invoke(param, param.thisObject)
@@ -133,12 +195,13 @@ abstract class XposedHooks {
     }
 
     data class MethodHook<T>(
-        val afterHookedMethod: (XC_MethodHook.MethodHookParam.(result: Any?) -> MethodResult<T>)? = null,
-        val beforeHookedMethod: (XC_MethodHook.MethodHookParam.(obj: Any?) -> MethodResult<T>)? = null,
+        val afterHookedMethod: (MethodHookParam.(result: Any?) -> MethodResult<T>)? = null,
+        val beforeHookedMethod: (MethodHookParam.(obj: Any?) -> MethodResult<T>)? = null,
     )
 
     sealed class MethodResult<T> {
         data class Replace<T>(val value: T?): MethodResult<T>()
         class Skip<T>: MethodResult<T>()
     }
+
 }

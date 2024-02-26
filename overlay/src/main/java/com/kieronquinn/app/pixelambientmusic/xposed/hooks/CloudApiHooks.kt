@@ -2,6 +2,8 @@ package com.kieronquinn.app.pixelambientmusic.xposed.hooks
 
 import android.os.Build
 import com.kieronquinn.app.pixelambientmusic.xposed.InjectedHooks
+import com.kieronquinn.app.pixelambientmusic.xposed.Xposed
+import com.kieronquinn.app.pixelambientmusic.xposed.Xposed.MethodHookParam
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 
@@ -16,9 +18,9 @@ object CloudApiHooks: InjectedHooks() {
 
     override fun custom(clazz: Class<*>) {
         //Disable constructor
-        XposedBridge.hookMethod(
+        Xposed.hookMethod(
             clazz.constructors.first(),
-            object: XC_MethodHook() {
+            object: Xposed.MethodHook() {
                 override fun beforeHookedMethod(param: MethodHookParam) {
                     super.beforeHookedMethod(param)
                     if(!shouldBlock) return
@@ -27,9 +29,9 @@ object CloudApiHooks: InjectedHooks() {
             }
         )
         //Make isAvailable always return false
-        XposedBridge.hookMethod(
+        Xposed.hookMethod(
             clazz.methods.first { it.returnType == Boolean::class.java },
-            object: XC_MethodHook() {
+            object: Xposed.MethodHook() {
                 override fun beforeHookedMethod(param: MethodHookParam) {
                     super.beforeHookedMethod(param)
                     if(!shouldBlock) return

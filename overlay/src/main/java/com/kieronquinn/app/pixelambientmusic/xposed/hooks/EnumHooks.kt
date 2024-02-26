@@ -1,6 +1,7 @@
 package com.kieronquinn.app.pixelambientmusic.xposed.hooks
 
 import android.util.Log
+import com.kieronquinn.app.pixelambientmusic.xposed.Xposed
 import com.kieronquinn.app.pixelambientmusic.xposed.XposedHooks
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge
@@ -17,7 +18,7 @@ class EnumHooks: XposedHooks() {
 
     private fun constructor_enum(name: String, ordinal: Int) = MethodHook(afterHookedMethod = {
         if(VALUES_RELEASES.contains(name)){
-            thisObject.hookDeveloperModeIfRequired()
+            thisObject?.hookDeveloperModeIfRequired()
         }
         MethodResult.Skip<Unit>()
     })
@@ -27,11 +28,11 @@ class EnumHooks: XposedHooks() {
             it.parameterCount == 0 && it.returnType == Boolean::class.java
         }
         if(booleanMethodCount != 2) return
-        XposedBridge.hookMethod(
+        Xposed.replaceMethod(
             //This should be stable as there are only two methods and this is the first
             this::class.java.getMethod("a"),
-            object: XC_MethodReplacement() {
-                override fun replaceHookedMethod(param: MethodHookParam): Any {
+            object: Xposed.MethodReplacement() {
+                override fun replaceHookedMethod(param: Xposed.MethodHookParam): Any {
                     param.result = true
                     return true
                 }

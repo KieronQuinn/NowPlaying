@@ -53,6 +53,7 @@ dependencies {
     implementation("androidx.core:core:1.12.0")
     implementation("org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
     implementation("com.aliucord:Aliuhook:6cc5993")
+    implementation("top.canyie.pine:core:0.2.8")
     implementation("com.google.protobuf:protobuf-lite:3.0.1")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.squareup.picasso:picasso:2.71828")

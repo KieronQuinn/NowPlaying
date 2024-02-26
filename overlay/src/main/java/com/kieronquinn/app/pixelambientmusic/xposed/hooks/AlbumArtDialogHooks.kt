@@ -32,7 +32,7 @@ object AlbumArtDialogHooks: InjectedHooks() {
         extras: Bundle
     ) = MethodHook(afterHookedMethod = {
         if(!albumArtRetriever.isEnabled()) return@MethodHook MethodResult.Skip()
-        val timestamp = thisObject.findTimestamp()?.toLongOrNull()
+        val timestamp = thisObject?.findTimestamp()?.toLongOrNull()
             ?: return@MethodHook MethodResult.Skip()
         val view = result as View
         val context = view.context
